@@ -22,30 +22,28 @@ def show_state_of_game():
     print("Użyte litery:", used_letters)
     print()
 
-def check_letter(letter):
-    if letter.isalnum() == True and len(letter) == 1:
-        print("")
-    else:   
-        print("podaj litere")
-
-
-
-while True:
+def letter_add():
     letter = input('Podaj litere  ')
     letter = letter.lower()
-
-    
-
     while letter.isalpha() == False or len(letter) != 1:
         print("Musisz Podać literę!")
         letter = input('Podaj literę ')
         letter = letter.lower()
-    
-    for leter in used_letters:
-            print("Litera juz była")
-    
-   
+    return letter
+
+def check_letter(letter, used_letters):
+    while letter in used_letters:
+        print("litera już była")
+        letter = letter_add()
     used_letters.append(letter)
+    return letter       
+
+while True:
+    letter = letter_add()
+    check_letter(letter,used_letters)
+    
+
+    
     found_indexes = find_indexes(word, letter)
     
     if len(found_indexes) == 0:
@@ -58,6 +56,7 @@ while True:
     else:
         for index in found_indexes:
              user_word[index]= letter
+
         
         if "".join(user_word) == word:
             print(" Brawo to jest to słowo - ",word)
