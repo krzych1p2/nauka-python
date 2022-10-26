@@ -4,12 +4,37 @@ from pickle import FALSE
 import sys
 import random
 no_of_tries = 5
-word = "kamila"
+
 user_word = []
 used_letters = []
 word_list = []
 list_letters = []
 len_list_letters = 6
+
+
+def words(how_many_word):
+    
+    list_letters = open('słowa.txt',"r", encoding="utf-8").readlines()
+    
+    while how_many_word != 0:
+        word = random.choice(list_letters).strip()
+        if word not in word_list:
+            word_list.append(word)
+            how_many_word -= 1
+        
+    return word_list
+       
+def how_words(how_many_word):
+    while True:
+        how_many_word = input("Podaj ile słów chcesz odgadnąć - ")
+        try:
+            how_many_word=int(how_many_word)
+            if how_many_word > 10 or how_many_word <= 0:
+                print("Musisz Podać liczbe! od 1 do " ,len_list_letters)
+            else:
+                return how_many_word 
+        except(ValueError,TypeError):
+            print("Musisz podac liczbe !")
 
 def find_indexes(word,letter):
     indexes = []
@@ -20,8 +45,7 @@ def find_indexes(word,letter):
             indexes.append(index)
          
     return indexes
-for _ in word:
-    user_word.append("_")
+    
 
 def show_state_of_game():
     print()
@@ -46,56 +70,52 @@ def check_letter(letter, used_letters):
     used_letters.append(letter)
     return letter       
 
-def words(how_many_word):
-    
-    list_letters = open('słowa.txt',"r", encoding="utf-8").readlines()
-    
-    while how_many_word != -1:
-        word = random.choice(list_letters).strip()
-        if word not in word_list:
-            word_list.append(word)
-            how_many_word -= 1
-    return print(word_list)
-       
-def how_words(how_many_word):
-    while True:
-        how_many_word = input("Podaj ile słów chcesz odgadnąć")
-        try:
-            how_many_word=int(how_many_word)
-            if how_many_word > 10 or how_many_word <= 0:
-                print("Musisz Podać liczbe! od 1 do " ,len_list_letters)
-            else:
-                return how_many_word
-        except(ValueError,TypeError):
-            print("Musisz podac liczbe")
-        
-
-how_many_word= 1
+def clear_table():
+    used_letters = []
+    list_letters = []
+    return used_letters,list_letters
+iter =1
+how_many_word= 4
 print('Witaj w grze Wisielec')
-how_words(how_many_word)
-words(how_many_word)
 
-while True:   
-    letter = letter_add()
-    check_letter(letter,used_letters)
-    found_indexes = find_indexes(word, letter)
+words(how_words(how_many_word))
+for word in word_list:
     
-    
-    if len(found_indexes) == 0:
-        print(f"Brak litery {letter} w słowie! ")
-        no_of_tries -=1
+    for _ in word:
+            user_word.append("_")
+    while True:   
         
-        if no_of_tries ==0:
-            print("Game Ower")
-            sys.exit(0)
-    else:
-        for index in found_indexes:
-             user_word[index]= letter
+        letter = letter_add()
+        check_letter(letter,used_letters)
+        found_indexes = find_indexes(word, letter)
+        
+        
+        if len(found_indexes) == 0:
+            print(f"Brak litery {letter} w słowie! ")
+            no_of_tries -=1
+            
+            if no_of_tries ==0:
+                print("Game Ower")
+                clear_table()
+                break
+        else:
+            for index in found_indexes:
+                user_word[index]= letter
 
-        
-        if "".join(user_word) == word:
-            print(" Brawo to jest to słowo - ",word)
-            sys.exit(0)
-    show_state_of_game()
+            
+            if "".join(user_word) == word:
+                print(" Brawo to jest to słowo - ",word)
+                
+                user_word = []
+                used_letters = []
+                if iter < len(word_list):
+                    print(f"Pozostało {len(word_list)-iter} słowo/a do odgadnięcia")
+                else:
+                    print("Udało Ci się zgadnąć wszystkie słowa ",word_list)
+                iter += 1
+            
+                
+                break
+        show_state_of_game()
 
 
