@@ -1,8 +1,16 @@
+from cmath import isnan
+import numbers
+from pickle import FALSE
 import sys
+import random
 no_of_tries = 5
 word = "kamila"
 user_word = []
 used_letters = []
+word_list = []
+list_letters = []
+len_list_letters = 6
+
 def find_indexes(word,letter):
     indexes = []
     
@@ -38,13 +46,40 @@ def check_letter(letter, used_letters):
     used_letters.append(letter)
     return letter       
 
-while True:
+def words(how_many_word):
+    
+    list_letters = open('słowa.txt',"r", encoding="utf-8").readlines()
+    
+    while how_many_word != -1:
+        word = random.choice(list_letters).strip()
+        if word not in word_list:
+            word_list.append(word)
+            how_many_word -= 1
+    return print(word_list)
+       
+def how_words(how_many_word):
+    while True:
+        how_many_word = input("Podaj ile słów chcesz odgadnąć")
+        try:
+            how_many_word=int(how_many_word)
+            if how_many_word > 10 or how_many_word <= 0:
+                print("Musisz Podać liczbe! od 1 do " ,len_list_letters)
+            else:
+                return how_many_word
+        except(ValueError,TypeError):
+            print("Musisz podac liczbe")
+        
+
+how_many_word= 1
+print('Witaj w grze Wisielec')
+how_words(how_many_word)
+words(how_many_word)
+
+while True:   
     letter = letter_add()
     check_letter(letter,used_letters)
-    
-
-    
     found_indexes = find_indexes(word, letter)
+    
     
     if len(found_indexes) == 0:
         print(f"Brak litery {letter} w słowie! ")
