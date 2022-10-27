@@ -1,4 +1,5 @@
 from cmath import isnan
+from fileinput import close
 import numbers
 from pickle import FALSE
 import sys
@@ -21,7 +22,7 @@ def words(how_many_word):
         if word not in word_list:
             word_list.append(word)
             how_many_word -= 1
-        
+       
     return word_list
        
 def how_words(how_many_word):
@@ -73,18 +74,23 @@ def check_letter(letter, used_letters):
 def clear_table():
     used_letters = []
     list_letters = []
-    return used_letters,list_letters
-iter =1
+    no_of_tries = 5
+    return used_letters,list_letters,no_of_tries
+
 how_many_word= 4
 print('Witaj w grze Wisielec')
 
 words(how_words(how_many_word))
+iter = len(word_list)
 for word in word_list:
     
     for _ in word:
             user_word.append("_")
+
     while True:   
-        
+        print("Twoje słowo do odgadnięcia ")
+        print(user_word)
+
         letter = letter_add()
         check_letter(letter,used_letters)
         found_indexes = find_indexes(word, letter)
@@ -95,8 +101,10 @@ for word in word_list:
             no_of_tries -=1
             
             if no_of_tries ==0:
-                print("Game Ower")
-                clear_table()
+                print("Nie udało Ci się zgadnąć słowa - ",word)
+                user_word = []
+                used_letters = []
+                no_of_tries = 5
                 break
         else:
             for index in found_indexes:
@@ -108,11 +116,16 @@ for word in word_list:
                 
                 user_word = []
                 used_letters = []
-                if iter < len(word_list):
-                    print(f"Pozostało {len(word_list)-iter} słowo/a do odgadnięcia")
+                no_of_tries = 5
+                
+                iter -= 1
+                if iter > 0:
+                    
+                    print(f"Pozostało {iter} słowo/a do odgadnięcia")
+                    
                 else:
                     print("Udało Ci się zgadnąć wszystkie słowa ",word_list)
-                iter += 1
+                
             
                 
                 break
